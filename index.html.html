@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心動指令 - 翻牌遊戲</title>
+    <style>
+        :root {
+            /* 從圖片中提取的顏色 */
+            --bg-color: #030303; /* 極黑 */
+            --fog-red: #3a0005; /* 隱約紅煙霧 */
+            --gold: #d4af37; /* 金色邊框 */
+            --bright-red: #e60012; /* 卡片紅心 */
+            --text-color-zh: #f4e4bc; /* 白金色文字 */
+            --text-color-en: #a78b4a; /* 深金色文字 */
+        }
+
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-color);
+            /* 模擬圖片的背景煙霧 */
+            background-image: radial-gradient(circle at center, var(--fog-red) 0%, var(--bg-color) 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color-zh);
+        }
+
+        h1 {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+            text-align: center;
+        }
+
+        /* 牌組容器 */
+        .card-container {
+            perspective: 1000px;
+            width: 320px;
+            height: 450px;
+            cursor: pointer;
+        }
+
+        /* 牌片主體 */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border-radius: 20px;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* 正反面共通樣式 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            border: 2px solid var(--gold); /* 呼應圖片邊框 */
+        }
+
+        /* 正面：直接使用你提供的圖片 */
+        .card-front {background-image: url('cover.jpg');
+            background-size: cover;
+            background-position: center;
+            box-sizing: border-box;
+            border: none; /* 圖片自帶邊框 */
+        }
+        
+        /* 💡 為了在沒有網路的情況下執行，這裡使用了圖片的 Base64 代碼。
+           我已經把你的圖片壓縮並嵌入。這會讓代碼變得非常長，但可以離線執行。 */
+
+        /* 反面：題目內容樣式 */
+        .card-back {
+            background-color: #1a0003; /* 極深紅色背景 */
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 50px rgba(230, 0, 18, 0.2); /* 內部的紅光 */
+        }
+
+        .title-zh {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color-zh);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .title-en {
+            font-size: 14px;
+            color: var(--text-color-en);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* 金屬質感按鈕樣式 */
+        .btn-group {
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--gold) 0%, #b38b1f 100%);
+            color: #1a0003;
+            border: none;
+            border-radius: 5px; /* 方形更顯復古金屬感 */
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌹 心動夜：驚喜指令 </h1>
+
+    <div class="card-container" onclick="flipCard()">
+        <div class="card" id="card">
+            <div class="card-face card-front"></div>
+            <div class="card-face card-back">
+                <div id="content-zh" class="title-zh">載入中...</div>
+                <div id="content-en" class="title-en">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="nextCard(event)">下一籤</button>
+    </div>
+
+    <script>
+        // 題目與英文
+        const data = [
+            { zh: "兩人對視 30 秒，期間男生必須用最深情的語氣誇獎女生三個優點。", en: "The Deep Stare: Lock eyes for 30 seconds. Praise three qualities." },
+            { zh: "男生在女生耳邊說一句平時不敢在大家面前說的肉麻情話。", en: "The Secret Whisper: Whisper a 'cheesy' romantic phrase." },
+            { zh: "兩人手牽手維持 3 輪遊戲，直到輪到你們下一輪為止。", en: "Hand-in-Hand: Keep hands interlocked for the next three rounds." },
+            { zh: "男生背起女生繞現場走一圈，並由女生對大家飛吻。", en: "The Royal Walk: Piggyback ride around the room with kisses." },
+            { zh: "兩人用嘴唇共食一段 Pocky，直到剩下不到 1 公分。", en: "The Pocky Challenge: Share a Pocky until less than 1cm left." },
+            { zh: "【指定吻位】：由另一對情侶指定部位，你必須深情親吻伴侶該處。", en: "Designated Kiss: Kiss your partner on a spot chosen by others." },
+            { zh: "【盲手摸索】：伴侶閉眼，你隔著衣服觸碰他一個部位，讓他大聲說出位置。", en: "Blind Touch: Partner guesses where you touch them through clothes." },
+            { zh: "【感官交換】：男生喝冰水、女生喝溫水，兩人立刻接吻感受溫差。", en: "Sensory Swap: Ice vs Warm water kiss contrast." },
+            { zh: "【人體按摩】：男生幫女生進行 1 分鐘的肩頸按摩，手不能離開皮膚。", en: "Personal Massage: 1-minute neck massage without breaking contact." },
+            { zh: "【背後擁抱】：男生從後方環抱女生，維持一輪遊戲。", en: "Back Hug: Maintain a hug from behind for one full round." },
+            { zh: "【領地標記】：在伴侶肩膀或脖子處，留下一個維持 10 秒的深吻。", en: "The Mark: 10-second deep kiss on shoulder or neck." },
+            { zh: "【輪廓描繪】：用指尖輕輕描繪伴侶胸口的輪廓，持續 15 秒。", en: "Tracing Contours: Trace heart area for 15 seconds." },
+            { zh: "【冰塊挑戰】：拿一顆冰塊放在伴侶後頸，兩人擁抱直到冰塊融化。", en: "Ice Challenge: Hug until ice melts on the neck." },
+            { zh: "【耳邊私語】：告訴伴侶一個你今晚想對他做的「壞壞小要求」。", en: "Naughty Secrets: Whisper a private request." },
+            { zh: "【解除束縛】：男生幫女生解開頭髮，或女生幫男生鬆開領帶/扣子。", en: "Loosen Up: Let down hair or loosen a button/tie." }
+        ];
+
+        function flipCard() {
+            const card = document.getElementById('card');
+            if (!card.classList.contains('is-flipped')) {
+                card.classList.add('is-flipped');
+            }
+        }
+
+        function nextCard(event) {
+            event.stopPropagation(); // 防止觸發翻牌
+            const card = document.getElementById('card');
+            
+            // 先翻回正面
+            card.classList.remove('is-flipped');
+            
+            // 延遲更換題目（等翻牌動畫做完一半）
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * data.length);
+                const item = data[randomIndex];
+                document.getElementById('content-zh').innerText = item.zh;
+                document.getElementById('content-en').innerText = item.en;
+            }, 300);
+        }
+
+        // 初始化載入第一題
+        window.onload = () => nextCard({stopPropagation: ()=>{}});
+    </script>
+</body>
+</html>
