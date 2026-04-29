@@ -9,9 +9,10 @@
             --bg-color: #030303;
             --fog-red: #3a0005;
             --gold: #d4af37;
+            --bright-gold: #f4e4bc; /* 更亮的白金色 */
             --bright-red: #e60012;
-            --text-color-zh: #f4e4bc;
-            --text-color-en: #a78b4a;
+            --text-color-zh: #ffffff; /* 純白，讓中文最清晰 */
+            --text-color-en: #f4e4bc; /* 明亮的白金，讓英文跳出來 */
         }
 
         body {
@@ -31,7 +32,7 @@
 
         h1 {
             color: var(--gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
             margin-bottom: 20px;
             letter-spacing: 5px;
             text-align: center;
@@ -85,22 +86,26 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 50px rgba(230, 0, 18, 0.2);
+            box-shadow: inset 0 0 60px rgba(230, 0, 18, 0.3);
         }
 
         .title-zh {
-            font-size: 19px;
+            font-size: 20px;
             font-weight: bold;
             color: var(--text-color-zh);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
+        /* 這裡調整了英文的樣式：加大、變亮、發光 */
         .title-en {
-            font-size: 13px;
-            color: var(--text-color-en);
+            font-size: 16px; /* 加大 */
+            color: var(--text-color-en); /* 變亮 */
             font-style: italic;
-            line-height: 1.4;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 8px rgba(244, 228, 188, 0.4); /* 增加發光感 */
         }
 
         .btn-group {
@@ -129,14 +134,14 @@
         .counter {
             margin-top: 15px;
             font-size: 12px;
-            color: var(--text-color-en);
-            opacity: 0.7;
+            color: var(--gold);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
-    <h1>🌹 心動夜：驚喜指令 (豪華版)</h1>
+    <h1>🌹 心動夜：驚喜指令</h1>
 
     <div class="card-container" onclick="flipCard()">
         <div class="card" id="card">
@@ -156,12 +161,13 @@
 
     <script>
         const data = [
+            // --- 62 題指令內容 ---
             { zh: "兩人對視 30 秒，期間男生必須用最深情的語氣誇獎女生三個優點。", en: "The Deep Stare: Lock eyes for 30 seconds. Praise three qualities." },
-            { zh: "男生在女生耳邊說一句平時不敢在大家面前說的肉麻情話。", en: "The Secret Whisper: Whisper a 'cheesy' romantic phrase." },
             { zh: "兩人手牽手維持 3 輪遊戲，直到輪到你們下一輪為止。", en: "Hand-in-Hand: Keep hands interlocked for the next three rounds." },
             { zh: "男生背起女生繞現場走一圈，並由女生對大家飛吻。", en: "The Royal Walk: Piggyback ride around the room with kisses." },
             { zh: "兩人用嘴唇共食一段 Pocky，直到剩下不到 1 公分。", en: "The Pocky Challenge: Share a Pocky until less than 1cm left." },
             { zh: "【指定吻位】：由另一對情侶指定部位，你必須深情親吻伴侶該處。", en: "Designated Kiss: Kiss your partner on a spot chosen by others." },
+            { zh: "【感官交換】：男生喝冰水、女生喝溫水，兩人立刻接吻感受溫差。", en: "Sensory Swap: Ice vs Warm water kiss contrast." },
             { zh: "【人體按摩】：男生幫女生進行 1 分鐘的肩頸按摩，手不能離開皮膚。", en: "Personal Massage: 1-minute neck massage without breaking contact." },
             { zh: "【背後擁抱】：男生從後方環抱女生，維持一輪遊戲。", en: "Back Hug: Maintain a hug from behind for one full round." },
             { zh: "【領地標記】：在伴侶肩膀或脖子處，留下一個維持 10 秒的深吻。", en: "The Mark: 10-second deep kiss on shoulder or neck." },
@@ -175,8 +181,10 @@
             { zh: "【指尖滑動】：用冰水浸濕手指，從伴侶的後頸慢慢滑動到脊椎末端。", en: "Cold Trace: Trace from the neck to the spine with icy fingers." },
             { zh: "【唇齒依戀】：兩人口含同一個冰塊，直到冰塊在兩人的舌尖融化。", en: "Ice Melting: Share one ice cube between mouths." },
             { zh: "【解除束縛】：女生幫男生解開皮帶扣；或男生幫女生解開內衣扣（隔著衣服）。", en: "Unleashed: Girl undoes his belt or guy undoes bra clasp." },
+            { zh: "【溫差接吻】：一人喝冰水，一人喝熱水，立刻進行一個 30 秒的深吻。", en: "Thermal Kiss: Ice vs warm deep kiss for 30s." },
             { zh: "【心跳感應】：男生手伸進女生上衣內（不觸碰內衣），感受心跳一分鐘。", en: "Heartbeat: Hand inside her shirt to feel the heartbeat." },
             { zh: "【禁力坐姿】：女生跨坐在男生大腿上，雙手環扣脖子，親吻男生喉結 10 秒。", en: "Straddle: Sit on his lap and kiss his Adam's apple." },
+            { zh: "【盲目探索】：一人戴上眼罩，另一人用舌尖觸碰其身上任一處，讓對方猜。", en: "Blind Guess: One blindfolded; the other touches with tongue." },
             { zh: "【大腿禁區】：男生用手按摩女生的內大腿根部，直到下一輪遊戲結束。", en: "Inner Thigh: Massage her inner thigh until next round." },
             { zh: "【領地標記】：在伴侶的脖子側邊留下一個清晰的吻痕（草莓）。", en: "Hickey: Leave a clear love mark on the neck." },
             { zh: "【呼吸交纏】：兩人口對口呼吸對方的空氣，持續 20 秒不准分開。", en: "Breath Exchange: Share breath for 20s mouth-to-mouth." },
@@ -198,12 +206,12 @@
             { zh: "【熱力循環】：兩人手心相對，感受對方體溫，並親吻對方手心。", en: "Palm Heat: Press palms together and kiss the palms." },
             { zh: "【絕對距離】：兩人的唇保持 1 毫米距離 30 秒，不准親到也不准移開。", en: "The 1mm Gap: 1mm apart for 30s without contact." },
             { zh: "【下巴控制】：女生抬起男生下巴，強迫他看著妳的眼睛說「我是妳的」。", en: "Chin Lift: Lift his chin and make him say 'I am yours'." },
-            { zh: "【指甲輕劃】：女生用指甲在男生手臂內側輕輕劃過，引起陣陣戰慄。", en: "Nail Scratch: Lightly scratch his inner arm." },
-            { zh: "【私密要求】：向伴侶提出一個今晚回房間後的「特殊要求」。", en: "Private Request: Make a 'special request' for later." },
+            { zh: "【指甲輕劃】：女生用指尖在男生手臂內側輕輕劃過，引起陣陣戰慄。", en: "Nail Scratch: Lightly scratch his inner arm." },
             { zh: "【酒精傳遞】：口含一小口酒傳給伴侶，並在口中停留 5 秒。", en: "Wine Transfer: Transfer wine mouth-to-mouth." },
             { zh: "【頸部埋首】：男生將臉埋在女生頸窩深呼吸，直到下一輪遊戲結束。", en: "Neck Bury: Bury face in her neck until next round." },
             { zh: "【衣服內探】：女生手伸進男生褲子後口袋，親吻他的嘴唇。", en: "Pocket Reach: Hand in back pocket while kissing." },
             { zh: "【胸口烙印】：在伴侶胸口心臟位置留下一個長達 10 秒的深吻。", en: "Heart Kiss: A 10-second deep kiss over the heart." },
+            { zh: "【低音誘惑】：男生在女生耳邊用最低沈的聲音說出她的名字。", en: "Deep Voice: Whisper her name in the deepest voice." },
             { zh: "【腿部遊走】：女生用腿蹭男生的腿，持續一分鐘。", en: "Leg Rub: Rub your legs against his for one minute." },
             { zh: "【禁區探索】：由另一對情侶指定一個雙方身體的「禁區」進行親吻。", en: "Forbidden Zone: Kiss a 'taboo' spot chosen by others." },
             { zh: "【蝴蝶之吻】：用睫毛輕觸伴侶的臉頰，像蝴蝶拍動翅膀一樣。", en: "Butterfly Kiss: Tickle cheek with eyelashes." },
