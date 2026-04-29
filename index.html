@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心動指令 - 翻牌遊戲</title>
+    <title>心動指令 - 終極豪華版 (62題)</title>
     <style>
         :root {
-            /* 從圖片中提取的顏色 */
-            --bg-color: #030303; /* 極黑 */
-            --fog-red: #3a0005; /* 隱約紅煙霧 */
-            --gold: #d4af37; /* 金色邊框 */
-            --bright-red: #e60012; /* 卡片紅心 */
-            --text-color-zh: #f4e4bc; /* 白金色文字 */
-            --text-color-en: #a78b4a; /* 深金色文字 */
+            --bg-color: #030303;
+            --fog-red: #3a0005;
+            --gold: #d4af37;
+            --bright-red: #e60012;
+            --text-color-zh: #f4e4bc;
+            --text-color-en: #a78b4a;
         }
 
         body {
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             background-color: var(--bg-color);
-            /* 模擬圖片的背景煙霧 */
             background-image: radial-gradient(circle at center, var(--fog-red) 0%, var(--bg-color) 70%);
             display: flex;
             flex-direction: column;
@@ -28,17 +26,18 @@
             margin: 0;
             padding: 20px;
             color: var(--text-color-zh);
+            overflow: hidden;
         }
 
         h1 {
             color: var(--gold);
             text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             letter-spacing: 5px;
             text-align: center;
+            font-size: 24px;
         }
 
-        /* 牌組容器 */
         .card-container {
             perspective: 1000px;
             width: 320px;
@@ -46,7 +45,6 @@
             cursor: pointer;
         }
 
-        /* 牌片主體 */
         .card {
             width: 100%;
             height: 100%;
@@ -61,7 +59,6 @@
             transform: rotateY(180deg);
         }
 
-        /* 正反面共通樣式 */
         .card-face {
             position: absolute;
             width: 100%;
@@ -71,33 +68,28 @@
             padding: 30px;
             box-sizing: border-box;
             text-align: center;
-            border: 2px solid var(--gold); /* 呼應圖片邊框 */
+            border: 2px solid var(--gold);
         }
 
-        /* 正面：直接使用你提供的圖片 */
-        .card-front {background-image: url('cover.jpg');
+        .card-front {
+            background-image: url('cover.jpg');
             background-size: cover;
             background-position: center;
-            box-sizing: border-box;
-            border: none; /* 圖片自帶邊框 */
+            border: none;
         }
-        
-        /* 💡 為了在沒有網路的情況下執行，這裡使用了圖片的 Base64 代碼。
-           我已經把你的圖片壓縮並嵌入。這會讓代碼變得非常長，但可以離線執行。 */
 
-        /* 反面：題目內容樣式 */
         .card-back {
-            background-color: #1a0003; /* 極深紅色背景 */
+            background-color: #1a0003;
             transform: rotateY(180deg);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 50px rgba(230, 0, 18, 0.2); /* 內部的紅光 */
+            box-shadow: inset 0 0 50px rgba(230, 0, 18, 0.2);
         }
 
         .title-zh {
-            font-size: 22px;
+            font-size: 19px;
             font-weight: bold;
             color: var(--text-color-zh);
             margin-bottom: 20px;
@@ -105,26 +97,25 @@
         }
 
         .title-en {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-color-en);
             font-style: italic;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        /* 金屬質感按鈕樣式 */
         .btn-group {
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         button {
-            padding: 12px 30px;
+            padding: 12px 40px;
             font-size: 18px;
             font-weight: bold;
             letter-spacing: 2px;
             background: linear-gradient(135deg, var(--gold) 0%, #b38b1f 100%);
             color: #1a0003;
             border: none;
-            border-radius: 5px; /* 方形更顯復古金屬感 */
+            border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
@@ -135,21 +126,24 @@
             transform: translateY(-2px);
         }
 
-        button:active {
-            transform: translateY(0);
+        .counter {
+            margin-top: 15px;
+            font-size: 12px;
+            color: var(--text-color-en);
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-    <h1>🌹 心動夜：驚喜指令 </h1>
+    <h1>🌹 心動夜：驚喜指令 (豪華版)</h1>
 
     <div class="card-container" onclick="flipCard()">
         <div class="card" id="card">
             <div class="card-face card-front"></div>
             <div class="card-face card-back">
-                <div id="content-zh" class="title-zh">載入中...</div>
-                <div id="content-en" class="title-en">Loading...</div>
+                <div id="content-zh" class="title-zh">點擊下方抽籤</div>
+                <div id="content-en" class="title-en">Click below to start</div>
             </div>
         </div>
     </div>
@@ -157,62 +151,78 @@
     <div class="btn-group">
         <button onclick="nextCard(event)">下一籤</button>
     </div>
+    
+    <div id="counter" class="counter">載入中...</div>
 
     <script>
-        // 題目與英文
-const data = [
-            // --- 甜蜜類 (Sweet) ---
+        const data = [
             { zh: "兩人對視 30 秒，期間男生必須用最深情的語氣誇獎女生三個優點。", en: "The Deep Stare: Lock eyes for 30 seconds. Praise three qualities." },
             { zh: "男生在女生耳邊說一句平時不敢在大家面前說的肉麻情話。", en: "The Secret Whisper: Whisper a 'cheesy' romantic phrase." },
             { zh: "兩人手牽手維持 3 輪遊戲，直到輪到你們下一輪為止。", en: "Hand-in-Hand: Keep hands interlocked for the next three rounds." },
             { zh: "男生背起女生繞現場走一圈，並由女生對大家飛吻。", en: "The Royal Walk: Piggyback ride around the room with kisses." },
-            { zh: "兩人用嘴唇共食一段 Pocky 或長條零食，直到剩下不到 1 公分。", en: "The Pocky Challenge: Share a Pocky until less than 1cm left." },
-            { zh: "男生單膝下跪，親吻女生的手背並大聲說「我的女王」。", en: "Royal Respect: Kneel and kiss her hand, calling her 'My Queen'." },
-            { zh: "由女生幫男生重新整理頭髮，並在額頭留下一個輕吻。", en: "Hair Styling: Fix his hair and leave a light kiss on his forehead." },
-            { zh: "兩人臉貼臉進行自拍，並維持這個姿勢直到下一輪。", en: "Cheek to Cheek: Take a selfie and maintain the pose." },
-            { zh: "男生對女生跳一段 20 秒的「可愛舞蹈」，女生負責錄影。", en: "Cute Dance: Guy performs a 20s dance while she records." },
-            { zh: "女生坐在男生大腿上，兩人共同喝完一杯飲料。", en: "Sharing a Drink: Girl sits on his lap while sharing a drink." },
+            { zh: "兩人用嘴唇共食一段 Pocky，直到剩下不到 1 公分。", en: "The Pocky Challenge: Share a Pocky until less than 1cm left." },
             { zh: "【指定吻位】：由另一對情侶指定部位，你必須深情親吻伴侶該處。", en: "Designated Kiss: Kiss your partner on a spot chosen by others." },
             { zh: "【盲手摸索】：伴侶閉眼，你隔著衣服觸碰他一個部位，讓他大聲說出位置。", en: "Blind Touch: Partner guesses where you touch them through clothes." },
             { zh: "【感官交換】：男生喝冰水、女生喝溫水，兩人立刻接吻感受溫差。", en: "Sensory Swap: Ice vs Warm water kiss contrast." },
             { zh: "【人體按摩】：男生幫女生進行 1 分鐘的肩頸按摩，手不能離開皮膚。", en: "Personal Massage: 1-minute neck massage without breaking contact." },
-            { zh: "【背後擁抱】：男生從後方環抱女生，臉貼在肩窩維持一輪遊戲。", en: "Back Hug: Embrace from behind for one full round." },
-            { zh: "用指尖輕輕描繪伴侶唇部的輪廓三圈，期間不能說話。", en: "Lip Tracing: Trace the lips with fingertips three times silently." },
-            { zh: "男生在女生耳邊吹氣，並輕輕咬一下她的耳垂。", en: "Ear Play: Blow air into her ear and gently bite the lobe." },
-            { zh: "兩人互換一件身上的飾品（如手錶、戒指）戴到遊戲結束。", en: "Item Swap: Exchange an accessory until the game ends." },
-            { zh: "女生用嘴巴幫男生解開一顆襯衫扣子。", en: "Button Release: Girl unbuttons one shirt button using only her mouth." },
-            { zh: "男生環抱女生的腰，女生環抱男生的脖子，深情注視 20 秒。", en: "The Tight Embrace: Hold each other and lock eyes for 20s." },
-            { zh: "【指尖漫遊】：男生用手指從女生的手心慢慢滑動到手肘內側。", en: "Finger Glide: Slide fingers from palm to inner elbow." },
-            { zh: "女生對男生的喉結輕輕吹氣，並說出一件他最性感的事。", en: "Neck Whisper: Blow on his Adam's apple and mention his sexiest trait." },
-            { zh: "男生抱著女生坐在腿上，兩人用一個吸管喝水。", en: "Lap Sip: Sit on his lap and share one straw." },
-            { zh: "【香氣識別】：伴侶閉眼，你在他身上某處塗一點香水讓他找出來。", en: "Scent Search: Find where the perfume was applied while blindfolded." },
-            { zh: "兩人的鼻尖碰鼻尖，維持 30 秒，期間不能笑場。", en: "Nose to Nose: Maintain contact for 30 seconds." },
+            { zh: "【背後擁抱】：男生從後方環抱女生，維持一輪遊戲。", en: "Back Hug: Maintain a hug from behind for one full round." },
             { zh: "【領地標記】：在伴侶肩膀或脖子處，留下一個維持 10 秒的深吻。", en: "The Mark: 10-second deep kiss on shoulder or neck." },
-            { zh: "【輪廓描繪】：用指尖輕輕描繪伴侶胸口或腰間的輪廓，持續 15 秒。", en: "Tracing Contours: Trace the body contours for 15 seconds." },
+            { zh: "【輪廓描繪】：用指尖輕輕描繪伴侶胸口的輪廓，持續 15 秒。", en: "Tracing Contours: Trace heart area for 15 seconds." },
             { zh: "【冰塊挑戰】：拿一顆冰塊放在伴侶後頸，兩人擁抱直到冰塊融化。", en: "Ice Challenge: Hug until ice melts on the neck." },
-            { zh: "【耳邊私語】：告訴伴侶一個你今晚想對他做的「壞壞小要求」。", en: "Naughty Secrets: Whisper a private request for later tonight." },
-            { zh: "【解除束縛】：男生幫女生解開頭髮，或女生幫男生鬆開領帶/皮帶。", en: "Loosen Up: Untie hair or loosen a tie/belt." },
-            { zh: "【法式熱吻】：兩人進行一個至少 15 秒的法式深吻。", en: "French Kiss: A passionate kiss for at least 15 seconds." },
-            { zh: "女生坐在男生腿上，雙手環住男生脖子，男生手放在女生腰間維持三輪。", en: "Intimate Sitting: Wrap arms around neck for three rounds." },
-            { zh: "男生親吻女生的鎖骨，並在該處留下一個輕微的齒痕。", en: "Collarbone Kiss: Kiss and leave a gentle bite mark." },
-            { zh: "【感官剝奪】：男生閉上眼，由女生引導他的手觸碰她身體最滿意的部位。", en: "Guided Touch: Blindfolded guy touches her favorite body part." },
-            { zh: "女生在男生的耳朵後方舔一下，並小聲喊他的名字。", en: "Ear Lick: Gently lick behind the ear and whisper his name." },
-            { zh: "兩人緊貼身體跳一段慢舞，過程中不准有縫隙。", en: "Slow Dance: Dance tightly without any space between bodies." },
-            { zh: "男生解開女生的一件衣物裝飾（如絲巾、外套），然後親吻該處。", en: "Unwrap: Remove one item of clothing and kiss the area." },
-            { zh: "女生躺在男生懷裡，由男生餵食水果，必須用嘴對嘴的方式。", en: "Mouth Feeding: Feed her fruit using your mouth." },
-            { zh: "【極限距離】：兩人的唇距離 0.5 公分，維持 1 分鐘不准親下去。", en: "The Gap: Lips 0.5cm apart for 1 minute without kissing." },
-            { zh: "男生從背後抱住女生，手自然放在女生的腹部，親吻她的後頸。", en: "Back Hug & Kiss: Kiss her neck while holding her waist." },
-            { zh: "【真心話大冒險】：說出一個你最想跟對方嘗試的體位或情境。", en: "Confession: Describe a position or scenario you want to try." },
-            { zh: "男生把女生抱起來（公主抱），繞場一週並親吻一下。", en: "Carry & Kiss: Princess carry her around and give a kiss." },
-            { zh: "女生在男生身上選一個地方畫一個小愛心。", en: "Heart Marker: Draw a small heart anywhere on his body." },
-            { zh: "【互換靈魂】：模仿伴侶最常說的一句話或動作，直到猜對為止。", en: "Mimicry: Imitate your partner until they guess it correctly." },
-            { zh: "【聲音誘惑】：用最性感的聲音在對方耳邊說「我想要你」。", en: "Vocal Seduction: Whisper 'I want you' in your sexiest voice." },
-            { zh: "兩人的手放進對方的口袋裡，維持一輪遊戲。", en: "Pocket Hands: Keep hands in each other's pockets for one round." },
-            { zh: "【角色扮演】：男生演霸道總裁，女生演小秘書，對話一分鐘。", en: "Roleplay: CEO and Secretary dialogue for one minute." },
-            { zh: "男生親吻女生的腳背，並幫她穿上鞋子。", en: "Foot Kiss: Kiss her instep and help her put on shoes." },
-            { zh: "女生在男生背後留下一個清晰的唇印。", en: "Lipstick Mark: Leave a clear lipstick mark on his back/shoulder." },
-            { zh: "【終極終點】：兩人進行長達 1 分鐘的擁吻，無視旁人。", en: "Eternal Kiss: A passionate 1-minute kiss ignoring everyone." }
+            { zh: "【耳邊私語】：告訴伴侶一個你今晚想對他做的「壞壞小要求」。", en: "Naughty Secrets: Whisper a private request." },
+            { zh: "【解除束縛】：男生幫女生解開頭髮，或女生幫男生鬆開領帶/扣子。", en: "Loosen Up: Let down hair or loosen a button/tie." },
+            { zh: "【深情標記】：在伴侶的鎖骨處留下一個持續 15 秒的吻，直到皮膚微紅。", en: "The Mark: A 15-second deep kiss on the collarbone." },
+            { zh: "【感官剝奪】：男生閉上眼睛，由女生引導他的手觸碰她身體最敏感的部位。", en: "Sensory Deprivation: Girl guides his hand to her sensitive spot." },
+            { zh: "【耳間私語】：咬住伴侶的耳垂，用氣音說出一段你對他的色情幻想。", en: "Ear Whisper: Bite the earlobe and whisper a fantasy." },
+            { zh: "【指尖滑動】：用冰水浸濕手指，從伴侶的後頸慢慢滑動到脊椎末端。", en: "Cold Trace: Trace from the neck to the spine with icy fingers." },
+            { zh: "【唇齒依戀】：兩人口含同一個冰塊，直到冰塊在兩人的舌尖融化。", en: "Ice Melting: Share one ice cube between mouths." },
+            { zh: "【解除束縛】：女生幫男生解開皮帶扣；或男生幫女生解開內衣扣（隔著衣服）。", en: "Unleashed: Girl undoes his belt or guy undoes bra clasp." },
+            { zh: "【溫差接吻】：一人喝冰水，一人喝熱水，立刻進行一個 30 秒的深吻。", en: "Thermal Kiss: Ice vs warm deep kiss for 30s." },
+            { zh: "【心跳感應】：男生手伸進女生上衣內（不觸碰內衣），感受心跳一分鐘。", en: "Heartbeat: Hand inside her shirt to feel the heartbeat." },
+            { zh: "【禁力坐姿】：女生跨坐在男生大腿上，雙手環扣脖子，親吻男生喉結 10 秒。", en: "Straddle: Sit on his lap and kiss his Adam's apple." },
+            { zh: "【盲目探索】：一人戴上眼罩，另一人用舌尖觸碰其身上任一處，讓對方猜。", en: "Blind Guess: One blindfolded; the other touches with tongue." },
+            { zh: "【大腿禁區】：男生用手按摩女生的內大腿根部，直到下一輪遊戲結束。", en: "Inner Thigh: Massage her inner thigh until next round." },
+            { zh: "【領地標記】：在伴侶的脖子側邊留下一個清晰的吻痕（草莓）。", en: "Hickey: Leave a clear love mark on the neck." },
+            { zh: "【呼吸交纏】：兩人口對口呼吸對方的空氣，持續 20 秒不准分開。", en: "Breath Exchange: Share breath for 20s mouth-to-mouth." },
+            { zh: "【誘惑指令】：女生對男生進行 30 秒的貼身熱舞，期間男生雙手必須背後。", en: "Lap Dance: Girl performs while his hands are tied." },
+            { zh: "【終極深吻】：進行一個持續 60 秒的法式深吻，期間手可以自由探索。", en: "Ultimate Passion: A 60s French kiss with exploration." },
+            { zh: "【秘密觸碰】：男生用指尖在女生背部衣服內寫字，女生猜不中要受罰。", en: "Back Writing: Trace a word on her bare back." },
+            { zh: "【香氣識別】：在身上噴一點香水，讓伴侶用鼻子找出位置並親吻該處。", en: "Scent Hunt: Find the perfume and kiss that spot." },
+            { zh: "【領帶遊戲】：用領帶或絲巾蒙住伴侶眼睛，親吻他最脆弱的部位 20 秒。", en: "Silk Constraint: Blindfold and kiss a vulnerable spot." },
+            { zh: "【齒痕標記】：男生在女生的肩膀上輕輕留下一個齒印。", en: "Bite Mark: Leave a gentle bite mark on her shoulder." },
+            { zh: "【私密告白】：告訴伴侶你現在身體哪個部位正因為他而感到發燙。", en: "Heat Confession: Tell which part of your body feels hot." },
+            { zh: "【腰線描繪】：女生解開男生襯衫最下面兩顆扣子，手伸進去觸碰腹肌。", en: "Abs Trace: Reach inside his shirt and feel his muscles." },
+            { zh: "【耳邊誘惑】：用舌尖濕潤伴侶的耳根，並輕聲喘息。", en: "Ear Lick: Wet the back of their ear and groan softly." },
+            { zh: "【禁斷之吻】：男生抱起女生，讓女生雙腿環住男生的腰進行接吻。", en: "Wrap Around: Carry her with her legs around your waist." },
+            { zh: "【指間傳情】：兩人的十指交扣，親吻對方的指縫處。", en: "Finger Kiss: Interlock fingers and kiss between each finger." },
+            { zh: "【感官挑戰】：將一小滴飲料滴在伴侶鎖骨，用嘴巴將其清理乾淨。", en: "Clean Up: Drip a drop of drink and lick it off." },
+            { zh: "【背後柔情】：男生從後方伸手進女生腋下環抱胸部上方，維持一輪。", en: "Upper Chest Hug: Hold her upper chest from behind." },
+            { zh: "【眼神服從】：女生命令男生做一個他平時最害羞的動作。", en: "Command: Girl orders him to do a shy action." },
+            { zh: "【觸感記憶】：閉上眼，用嘴唇感受伴侶臉部輪廓一圈。", en: "Lip Trace: Use lips to trace the partner's face." },
+            { zh: "【熱力循環】：兩人手心相對，感受對方體溫，並親吻對方手心。", en: "Palm Heat: Press palms together and kiss the palms." },
+            { zh: "【絕對距離】：兩人的唇保持 1 毫米距離 30 秒，不准親到也不准移開。", en: "The 1mm Gap: 1mm apart for 30s without contact." },
+            { zh: "【下巴控制】：女生抬起男生下巴，強迫他看著妳的眼睛說「我是妳的」。", en: "Chin Lift: Lift his chin and make him say 'I am yours'." },
+            { zh: "【指甲輕劃】：女生用指甲在男生手臂內側輕輕劃過，引起陣陣戰慄。", en: "Nail Scratch: Lightly scratch his inner arm." },
+            { zh: "【私密要求】：向伴侶提出一個今晚回房間後的「特殊要求」。", en: "Private Request: Make a 'special request' for later." },
+            { zh: "【酒精傳遞】：口含一小口酒傳給伴侶，並在口中停留 5 秒。", en: "Wine Transfer: Transfer wine mouth-to-mouth." },
+            { zh: "【頸部埋首】：男生將臉埋在女生頸窩深呼吸，直到下一輪遊戲結束。", en: "Neck Bury: Bury face in her neck until next round." },
+            { zh: "【衣服內探】：女生手伸進男生褲子後口袋，親吻他的嘴唇。", en: "Pocket Reach: Hand in back pocket while kissing." },
+            { zh: "【胸口烙印】：在伴侶胸口心臟位置留下一個長達 10 秒的深吻。", en: "Heart Kiss: A 10-second deep kiss over the heart." },
+            { zh: "【低音誘惑】：男生在女生耳邊用最低沈的聲音說出她的名字。", en: "Deep Voice: Whisper her name in the deepest voice." },
+            { zh: "【腿部遊走】：女生用腿蹭男生的腿，持續一分鐘。", en: "Leg Rub: Rub your legs against his for one minute." },
+            { zh: "【禁區探索】：由另一對情侶指定一個雙方身體的「禁區」進行親吻。", en: "Forbidden Zone: Kiss a 'taboo' spot chosen by others." },
+            { zh: "【蝴蝶之吻】：用睫毛輕觸伴侶的臉頰，像蝴蝶拍動翅膀一樣。", en: "Butterfly Kiss: Tickle cheek with eyelashes." },
+            { zh: "【濕潤指尖】：男生用舌尖濕潤手指，然後輕撫女生的嘴唇。", en: "Wet Finger: Moisten a finger and stroke her lips." },
+            { zh: "【背後印記】：男生在女生脊椎骨每一節都留下一個輕吻。", en: "Spine Kisses: Kiss every vertebra down her spine." },
+            { zh: "【咬唇挑戰】：女生輕輕咬住男生的下唇，維持 10 秒。", en: "Lip Bite: Gently bite his lower lip for 10 seconds." },
+            { zh: "【絕對服從】：伴侶接下來五分鐘內可以對你下達任何身體指令。", en: "Absolute Obedience: Follow any physical command." },
+            { zh: "【溫柔綑綁】：用女生的頭髮纏繞住男生的手指，然後親吻手背。", en: "Hair Bound: Wrap hair around fingers and kiss." },
+            { zh: "【呼吸同步】：兩人緊擁，嘗試讓呼吸頻率完全一致，持續 30 秒。", en: "Sync Breathing: Synchronize breathing for 30s." },
+            { zh: "【鎖骨探險】：在鎖骨凹陷處滴一點水，用舌尖清理乾淨。", en: "Clavicle Dive: Use tongue to clean water from collarbone." },
+            { zh: "【長吻不放】：兩人接吻直到其中一人無法呼吸必須分開為止。", en: "Breathless Kiss: Kiss until one of you can't breathe." }
         ];
+
+        let remainingData = [...data];
 
         function flipCard() {
             const card = document.getElementById('card');
@@ -222,23 +232,28 @@ const data = [
         }
 
         function nextCard(event) {
-            event.stopPropagation(); // 防止觸發翻牌
+            event.stopPropagation();
             const card = document.getElementById('card');
-            
-            // 先翻回正面
             card.classList.remove('is-flipped');
             
-            // 延遲更換題目（等翻牌動畫做完一半）
             setTimeout(() => {
-                const randomIndex = Math.floor(Math.random() * data.length);
-                const item = data[randomIndex];
+                if (remainingData.length === 0) {
+                    alert("62 題指令已全部抽完！將重新洗牌。");
+                    remainingData = [...data];
+                }
+
+                const randomIndex = Math.floor(Math.random() * remainingData.length);
+                const item = remainingData.splice(randomIndex, 1)[0];
+
                 document.getElementById('content-zh').innerText = item.zh;
                 document.getElementById('content-en').innerText = item.en;
+                document.getElementById('counter').innerText = `剩餘題目：${remainingData.length}`;
             }, 300);
         }
 
-        // 初始化載入第一題
-        window.onload = () => nextCard({stopPropagation: ()=>{}});
+        window.onload = () => {
+            document.getElementById('counter').innerText = `剩餘題目：${data.length}`;
+        };
     </script>
 </body>
 </html>
